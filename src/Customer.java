@@ -34,4 +34,10 @@ public class Customer {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s %s", firstName, lastName);
+    }
 }

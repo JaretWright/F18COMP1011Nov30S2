@@ -23,13 +23,38 @@ public class HashMapTesting {
         sales.get(customer3).add(new Order("Gift Cards",200,10));
 
         //Show how much $ each customer spent
+        for (Customer customer:sales.keySet())
+        {
+            System.out.printf("%s spent a total of $%.2f%n",customer, getTotal(customer, sales));
+            System.out.printf("%s spent a total of $%.2f%n",customer, getAmountSpentStreamV(customer, sales));
+        }
+
+        //display the top customer
+        Customer topCustomer = getTopCustomer(sales);
+        System.out.printf("The top customer is %s, spending a total of $%.2f", topCustomer,
+                                        getAmountSpentStreamV(topCustomer, sales));
+    }
+
+    public static Customer getTopCustomer(HashMap<Customer, ArrayList<Order>> sales)
+    {
+        //Loop over the customers and compare their spending info
+        Customer topCustomer = null;
+        for (Customer customer:sales.keySet())
+        {
+            if (topCustomer==null)
+                topCustomer=customer;
+            else if (getTotal(topCustomer, sales) < getTotal(customer, sales))
+                topCustomer=customer;
+        }
+        return topCustomer;
 
     }
+
 
     /**
      * This method will return the total amount spent by a given customer
      */
-    public static double getAmountSpent(Customer customer, HashMap<Customer, ArrayList<Order>> sales)
+    public static double getTotal(Customer customer, HashMap<Customer, ArrayList<Order>> sales)
     {
         double total = 0;
         //the old way using a loop
@@ -38,4 +63,12 @@ public class HashMapTesting {
 
         return total;
     }
+
+    public static double getAmountSpentStreamV(Customer customer, HashMap<Customer, ArrayList<Order>> sales)
+    {
+        return sales.get(customer).stream()
+                .mapToDouble(order -> order.getOrderTotal())
+                .sum();
+    }
+
 }
